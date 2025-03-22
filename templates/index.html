@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThreatGuard - Fake News Detection</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .instructions {
+            background: #ffffff;
+            color: #000000;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: left;
+        }
+        .container {
+            background: #42a7f5;
+            padding: 40px;
+            border-radius: 12px;
+            width: 70%;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        textarea {
+            width: 95%;
+            padding: 14px;
+            font-size: 18px;
+            border: 2px solid #000000;
+            border-radius: 8px;
+            background-color: #ffffff;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background-color: #0e205b;
+            color: white;
+            padding: 14px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #292929;
+            transform: scale(1.05);
+        }
+
+        .scan-icon {
+            font-size: 20px;
+        }
+
+        /* Spinner */
+        .spinner {
+            display: none;
+            margin: 10px auto;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Result Styling */
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+
+        .true { color: #0a8c1e; }
+        .fake { color: #EF4444; }
+
+        /* Steps Section */
+        .steps {
+            text-align: left;
+            margin-top: 20px;
+            padding: 10px;
+            background: #22272e;
+            border-radius: 8px;
+        }
+    </style>
+
+    <script>
+        function showSpinner(formId, spinnerId) {
+            document.getElementById(spinnerId).style.display = 'block';
+            setTimeout(() => {
+                document.getElementById(spinnerId).style.display = 'none';
+            }, 3000);  // Simulating loading time
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2><i class="fas fa-newspaper"></i> Fake News Detection</h2>
+        
+        <div class="instructions">
+            <h3>How to Verify News Authenticity:</h3>
+            <p>Step 1: <strong>Copy</strong> the news article or headline you want to verify.</p>
+            <p>Step 2: <strong>Paste</strong> it into the input field on our website.</p>
+            <p>Step 3: <strong>Click</strong> the "Check" button to analyze the news.</p>
+            <p>Step 4: <strong>Review</strong> the result to see if it's real or fake.</p>
+        </div>
+        
+        <form method="post" action="/" onsubmit="showSpinner('newsForm', 'newsSpinner')">
+            <label for="text">Enter Text:</label>
+            <textarea name="text" rows="4" required></textarea>
+            <button type="submit"><i class="fas fa-search"></i> Analyze</button>
+            <div id="newsSpinner" class="spinner"></div>
+        </form>
+
+        {% if predicted_class %}
+            <div class="result-box {{ predicted_class.lower() }}">
+                <p><strong>Text:</strong> {{ input_text }}</p>
+                <p><strong>Predicted Class:</strong> {{ predicted_class }}</p>
+            </div>
+        {% endif %}
+
+        {% if message %}
+            <div class="error-message" style="color: red;">
+                {{ message }}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
